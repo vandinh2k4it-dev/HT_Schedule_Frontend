@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+/* Bật dark mode theo class .dark trên <html> (Tailwind v4 syntax) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+    color-scheme: light;
+}
+html.dark {
+    color-scheme: dark;
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Scrollbar mảnh, hợp tông xanh-đen hiện đại */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: rgb(148 163 184 / 0.4);
+    border-radius: 9999px;
+}
+html.dark ::-webkit-scrollbar-thumb {
+    background: rgb(71 85 105 / 0.6);
+}
+
+/* Hiệu ứng mờ dần khi chuyển trang / mount */
+@keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+    animation: fade-in-up 0.35s ease both;
+}
