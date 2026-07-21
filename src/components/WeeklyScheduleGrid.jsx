@@ -142,68 +142,61 @@ export default function WeeklyScheduleGrid({ onSuccess }) {
                 mỗi ngày chỉ được chọn 1 ca.
             </div>
 
-            <div className="overflow-x-auto -mx-4 px-4">
-                <div className="min-w-[560px]">
-                    {/* Header ngày */}
-                    <div className="grid grid-cols-8 gap-1 mb-1">
-                        <div/>
-                        {days.map(d => (
-                            <div key={d.format('YYYY-MM-DD')}
-                                 className="text-center text-xs font-medium py-1.5 rounded-lg
-              bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300">
-                                <div className="font-bold">{DAY_LABELS[d.day()]}</div>
-                                <div className="text-slate-400 dark:text-slate-500 text-xs">{d.format('D/M')}</div>
+            <div className="space-y-1.5">
+                {days.map(d => {
+                    const dateStr = d.format('YYYY-MM-DD')
+                    const dayTaken = hasExistingForDay(dateStr)
+                    const isToday = d.isSame(dayjs(), 'day')
+                    return (
+                        <div key={dateStr}
+                             className={`flex items-center gap-2 p-2 rounded-xl ${
+                                 isToday ? 'bg-sky-50/60 dark:bg-sky-500/5' : ''}`}>
+                            <div className="w-11 shrink-0 text-center">
+                                <p className={`text-xs font-medium ${
+                                    isToday ? 'text-sky-600 dark:text-sky-400' : 'text-slate-400 dark:text-slate-500'}`}>
+                                    {DAY_LABELS[d.day()]}
+                                </p>
+                                <p className={`text-sm font-bold ${
+                                    isToday ? 'text-sky-600 dark:text-sky-400' : 'text-slate-700 dark:text-slate-200'}`}>
+                                    {d.format('D/M')}
+                                </p>
                             </div>
-                        ))}
-                    </div>
-
-                    {/* Grid */}
-                    {displayShifts.map(shift => (
-                        <div key={shift.code} className="grid grid-cols-8 gap-1 mb-1">
-                            <div className={`text-xs font-bold px-1 py-2.5 rounded-lg
-            border flex flex-col items-center justify-center text-center
-            ${shiftClass(shift.code)}`}>
-                                <span>{shift.code}</span>
-                                <span className="font-normal opacity-70 text-xs">
-                            {shift.startTime}
-                        </span>
+                            <div className="flex-1 flex gap-1.5">
+                                {displayShifts.map(shift => {
+                                    const existing = getExisting(dateStr, shift.code)
+                                    const isSel = selected[dateStr] === shift.code
+                                    const disabled = !!existing || dayTaken
+                                    return (
+                                        <button key={shift.code}
+                                                onClick={() => handleSelect(dateStr, shift.code)}
+                                                disabled={disabled}
+                                                className={`flex-1 py-2 rounded-lg border text-xs font-bold
+                        transition-all
+                        ${existing
+                                                    ? STATUS_STYLE[existing.status] + ' border-transparent'
+                                                    : isSel
+                                                        ? shiftSolid(shift.code) + ' border-transparent'
+                                                        : disabled
+                                                            ? `${OFF_COLOR} cursor-not-allowed opacity-50`
+                                                            : `${shiftClass(shift.code)} active:opacity-70`
+                                                }`}>
+                                            {existing
+                                                ? `${shift.code} ${STATUS_ICON[existing.status]}`
+                                                : shift.code}
+                                        </button>
+                                    )
+                                })}
                             </div>
-                            {days.map(d => {
-                                const dateStr = d.format('YYYY-MM-DD')
-                                const existing = getExisting(dateStr, shift.code)
-                                const dayTaken = hasExistingForDay(dateStr)
-                                const isSel = selected[dateStr] === shift.code
-                                const disabled = !!existing || dayTaken
-                                return (
-                                    <button key={dateStr}
-                                            onClick={() => handleSelect(dateStr, shift.code)}
-                                            disabled={disabled}
-                                            className={`text-xs py-2.5 rounded-lg border font-medium
-                  transition-all
-                  ${existing
-                                                ? STATUS_STYLE[existing.status] + ' cursor-default border-transparent'
-                                                : isSel
-                                                    ? shiftSolid(shift.code) + ' border-transparent'
-                                                    : disabled
-                                                        ? `${OFF_COLOR} cursor-not-allowed`
-                                                        : 'bg-slate-50 dark:bg-slate-900 text-slate-300 dark:text-slate-600 border-slate-200 dark:border-slate-700 hover:bg-sky-50 dark:hover:bg-sky-500/10 hover:border-sky-300 dark:hover:border-sky-500/40 hover:text-sky-500'
-                                            }`}>
-                                        {existing
-                                            ? STATUS_ICON[existing.status]
-                                            : isSel ? '●' : '○'}
-                                    </button>
-                                )
-                            })}
                         </div>
-                    ))}
-                </div>
+                    )
+                })}
             </div>
 
             {/* Legend */}
             <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-slate-100 dark:border-slate-700">
-                <span className="text-xs bg-sky-500 text-white px-2 py-0.5 rounded-full">● Chọn</span>
-                <span className="text-xs bg-sky-500 text-white px-2 py-0.5 rounded-full">✓ Duyệt</span>
-                <span className="text-xs bg-amber-400 text-white px-2 py-0.5 rounded-full">⏳ Chờ</span>
+                <span className="text-xs bg-sky-500 text-white px-2 py-0.5 rounded-full">Đã bấm = đang chọn</span>
+                <span className="text-xs bg-sky-500 text-white px-2 py-0.5 rounded-full">✓ Đã duyệt</span>
+                <span className="text-xs bg-amber-400 text-white px-2 py-0.5 rounded-full">⏳ Chờ duyệt</span>
                 <span className="text-xs bg-slate-400 text-white px-2 py-0.5 rounded-full">✗ Từ chối</span>
             </div>
 

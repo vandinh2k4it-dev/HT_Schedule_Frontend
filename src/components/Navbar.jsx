@@ -36,7 +36,7 @@ export default function Navbar({ name, role, department }) {
     }
 
     return (
-        <nav className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl
+        <nav className="safe-top bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl
       border-b border-slate-200/70 dark:border-slate-800 px-4 py-3
       sticky top-0 z-50">
             <div className="max-w-4xl mx-auto flex items-center justify-between">

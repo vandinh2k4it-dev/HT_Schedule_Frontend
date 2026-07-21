@@ -18,6 +18,14 @@ body {
     transition: background-color 0.25s ease, color 0.25s ease;
 }
 
+/* Tránh nội dung bị thanh trạng thái (giờ/pin) của iPhone đè lên
+   khi mở app dạng "Thêm vào màn hình chính" (chế độ standalone) */
+@supports (padding-top: env(safe-area-inset-top)) {
+    .safe-top {
+        padding-top: env(safe-area-inset-top);
+    }
+}
+
 /* Scrollbar mảnh, hợp tông xanh-đen hiện đại */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
