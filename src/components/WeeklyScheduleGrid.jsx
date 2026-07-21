@@ -142,58 +142,62 @@ export default function WeeklyScheduleGrid({ onSuccess }) {
                 mỗi ngày chỉ được chọn 1 ca.
             </div>
 
-            {/* Header ngày */}
-            <div className="grid grid-cols-8 gap-1 mb-1">
-                <div/>
-                {days.map(d => (
-                    <div key={d.format('YYYY-MM-DD')}
-                         className="text-center text-xs font-medium py-1.5 rounded-lg
+            <div className="overflow-x-auto -mx-4 px-4">
+                <div className="min-w-[560px]">
+                    {/* Header ngày */}
+                    <div className="grid grid-cols-8 gap-1 mb-1">
+                        <div/>
+                        {days.map(d => (
+                            <div key={d.format('YYYY-MM-DD')}
+                                 className="text-center text-xs font-medium py-1.5 rounded-lg
               bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300">
-                        <div className="font-bold">{DAY_LABELS[d.day()]}</div>
-                        <div className="text-slate-400 dark:text-slate-500 text-xs">{d.format('D/M')}</div>
+                                <div className="font-bold">{DAY_LABELS[d.day()]}</div>
+                                <div className="text-slate-400 dark:text-slate-500 text-xs">{d.format('D/M')}</div>
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
 
-            {/* Grid */}
-            {displayShifts.map(shift => (
-                <div key={shift.code} className="grid grid-cols-8 gap-1 mb-1">
-                    <div className={`text-xs font-bold px-1 py-2.5 rounded-lg
+                    {/* Grid */}
+                    {displayShifts.map(shift => (
+                        <div key={shift.code} className="grid grid-cols-8 gap-1 mb-1">
+                            <div className={`text-xs font-bold px-1 py-2.5 rounded-lg
             border flex flex-col items-center justify-center text-center
             ${shiftClass(shift.code)}`}>
-                        <span>{shift.code}</span>
-                        <span className="font-normal opacity-70 text-xs">
+                                <span>{shift.code}</span>
+                                <span className="font-normal opacity-70 text-xs">
                             {shift.startTime}
                         </span>
-                    </div>
-                    {days.map(d => {
-                        const dateStr = d.format('YYYY-MM-DD')
-                        const existing = getExisting(dateStr, shift.code)
-                        const dayTaken = hasExistingForDay(dateStr)
-                        const isSel = selected[dateStr] === shift.code
-                        const disabled = !!existing || dayTaken
-                        return (
-                            <button key={dateStr}
-                                    onClick={() => handleSelect(dateStr, shift.code)}
-                                    disabled={disabled}
-                                    className={`text-xs py-2.5 rounded-lg border font-medium
+                            </div>
+                            {days.map(d => {
+                                const dateStr = d.format('YYYY-MM-DD')
+                                const existing = getExisting(dateStr, shift.code)
+                                const dayTaken = hasExistingForDay(dateStr)
+                                const isSel = selected[dateStr] === shift.code
+                                const disabled = !!existing || dayTaken
+                                return (
+                                    <button key={dateStr}
+                                            onClick={() => handleSelect(dateStr, shift.code)}
+                                            disabled={disabled}
+                                            className={`text-xs py-2.5 rounded-lg border font-medium
                   transition-all
                   ${existing
-                                        ? STATUS_STYLE[existing.status] + ' cursor-default border-transparent'
-                                        : isSel
-                                            ? shiftSolid(shift.code) + ' border-transparent'
-                                            : disabled
-                                                ? `${OFF_COLOR} cursor-not-allowed`
-                                                : 'bg-slate-50 dark:bg-slate-900 text-slate-300 dark:text-slate-600 border-slate-200 dark:border-slate-700 hover:bg-sky-50 dark:hover:bg-sky-500/10 hover:border-sky-300 dark:hover:border-sky-500/40 hover:text-sky-500'
-                                    }`}>
-                                {existing
-                                    ? STATUS_ICON[existing.status]
-                                    : isSel ? '●' : '○'}
-                            </button>
-                        )
-                    })}
+                                                ? STATUS_STYLE[existing.status] + ' cursor-default border-transparent'
+                                                : isSel
+                                                    ? shiftSolid(shift.code) + ' border-transparent'
+                                                    : disabled
+                                                        ? `${OFF_COLOR} cursor-not-allowed`
+                                                        : 'bg-slate-50 dark:bg-slate-900 text-slate-300 dark:text-slate-600 border-slate-200 dark:border-slate-700 hover:bg-sky-50 dark:hover:bg-sky-500/10 hover:border-sky-300 dark:hover:border-sky-500/40 hover:text-sky-500'
+                                            }`}>
+                                        {existing
+                                            ? STATUS_ICON[existing.status]
+                                            : isSel ? '●' : '○'}
+                                    </button>
+                                )
+                            })}
+                        </div>
+                    ))}
                 </div>
-            ))}
+            </div>
 
             {/* Legend */}
             <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-slate-100 dark:border-slate-700">

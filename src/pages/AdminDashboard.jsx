@@ -171,33 +171,36 @@ export default function AdminDashboard() {
             <Navbar name={payload.name || 'Admin'} role="ADMIN"/>
             <div className="max-w-5xl mx-auto px-3 py-4 animate-fade-in-up">
 
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-3 mb-4">
+                {/* Stats — 1 dải gọn thay vì 3 card rời rạc */}
+                <div className="flex bg-white dark:bg-slate-800/60 rounded-2xl mb-3
+              shadow-sm shadow-slate-900/5 border border-slate-100 dark:border-slate-700
+              divide-x divide-slate-100 dark:divide-slate-700 overflow-hidden">
                     {[
                         { label: 'Chờ duyệt', value: requests.length,   color: 'text-amber-500' },
                         { label: 'Nhân viên', value: employees.length,  color: 'text-sky-500'   },
                         { label: 'Loại ca',   value: shiftTypes.length, color: 'text-indigo-500'},
                     ].map(s => (
-                        <div key={s.label} className="bg-white dark:bg-slate-800/60
-              rounded-2xl p-3 shadow-sm shadow-slate-900/5
-              border border-slate-100 dark:border-slate-700 text-center">
-                            <p className="text-xs text-slate-400 dark:text-slate-500">{s.label}</p>
-                            <p className={`text-lg font-bold mt-0.5 ${s.color}`}>
+                        <div key={s.label} className="flex-1 py-2.5 text-center">
+                            <p className={`text-base font-bold leading-tight ${s.color}`}>
                                 {s.value}
+                            </p>
+                            <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
+                                {s.label}
                             </p>
                         </div>
                     ))}
                 </div>
 
-                {/* Tabs */}
-                <div className="grid grid-cols-3 sm:grid-cols-5 gap-1 mb-4">
+                {/* Tabs — thanh cuộn ngang 1 dòng, không vỡ dòng trên mobile */}
+                <div className="flex gap-1.5 mb-4 overflow-x-auto pb-1 -mx-3 px-3
+              [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
                     {TABS.map(t => (
                         <button key={t.key} onClick={() => setTab(t.key)}
-                                className={`py-2 rounded-xl text-xs font-medium
-                transition-all duration-200 px-1 relative ${
+                                className={`shrink-0 py-2 px-3.5 rounded-xl text-xs font-medium
+                whitespace-nowrap transition-all duration-200 relative ${
                                     tab === t.key
                                         ? 'bg-slate-900 dark:bg-sky-500 text-white shadow-md shadow-slate-900/10'
-                                        : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:text-slate-800 dark:hover:text-slate-100'}`}>
+                                        : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 active:bg-slate-50 dark:active:bg-slate-700'}`}>
                             {t.label}
                             {t.key === 'schedule' && requests.length > 0 && (
                                 <span className={`ml-1 text-xs px-1 py-0.5 rounded-full ${
@@ -217,53 +220,57 @@ export default function AdminDashboard() {
                         <div className="bg-white dark:bg-slate-800/60 rounded-2xl shadow-sm
               shadow-slate-900/5 border border-slate-100 dark:border-slate-700
               overflow-hidden">
-                            <div className="px-4 py-3 flex items-center justify-between flex-wrap gap-2">
-                                <div>
-                                    <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                                        📅 Lịch tham khảo — bấm vào ô để duyệt / từ chối / gán ca
-                                    </span>
-                                    {requests.length > 0 && (
-                                        <p className="text-xs text-amber-600 dark:text-amber-400 mt-0.5">
-                                            ⏳ {requests.length} yêu cầu đang chờ duyệt
+                            <div className="px-4 pt-3 pb-2.5">
+                                <div className="flex items-start justify-between gap-2">
+                                    <div className="min-w-0">
+                                        <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                                            📅 Lịch tham khảo
+                                        </h2>
+                                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+                                            Bấm vào ô để duyệt / từ chối / gán ca
                                         </p>
-                                    )}
+                                    </div>
+                                    <span className={`shrink-0 text-[11px] px-2 py-1 rounded-full font-medium ${
+                                        windowInfo?.canRegister
+                                            ? 'bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-300'
+                                            : 'bg-slate-100 dark:bg-slate-700/50 text-slate-500 dark:text-slate-400'}`}>
+                                        {windowInfo?.canRegister ? '🔓 Đang mở' : '🔒 Đã đóng'}
+                                    </span>
                                 </div>
-                                <div className="flex gap-2 flex-wrap items-center">
-                                    <button onClick={handleToggleWindow}
-                                            className={`text-xs px-3 py-1.5 rounded-lg
-                      font-medium transition ${
-                                                windowInfo?.canRegister
-                                                    ? 'bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-500/20'
-                                                    : 'bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-300 hover:bg-sky-100 dark:hover:bg-sky-500/20'}`}>
-                                        {windowInfo?.canRegister
-                                            ? '🔒 Đóng đăng ký'
-                                            : '🔓 Mở đăng ký'}
-                                    </button>
+
+                                {requests.length > 0 && (
+                                    <p className="text-xs text-amber-600 dark:text-amber-400 mt-1.5">
+                                        ⏳ {requests.length} yêu cầu đang chờ duyệt
+                                    </p>
+                                )}
+
+                                <div className="flex items-center gap-2 mt-3">
                                     <input type="date" value={weekStart}
                                            onChange={e => setWeekStart(e.target.value)}
-                                           className="text-xs px-2 py-1.5 bg-slate-50 dark:bg-slate-900
+                                           className="flex-1 min-w-0 text-xs px-2.5 py-2 bg-slate-50 dark:bg-slate-900
                       border border-slate-200 dark:border-slate-700
                       text-slate-700 dark:text-slate-200 rounded-lg
                       focus:outline-none focus:ring-2 focus:ring-sky-500"/>
+                                    <button onClick={handleToggleWindow}
+                                            className={`shrink-0 text-xs px-3 py-2 rounded-lg
+                      font-medium transition ${
+                                                windowInfo?.canRegister
+                                                    ? 'bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-300 active:bg-rose-100 dark:active:bg-rose-500/20'
+                                                    : 'bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-300 active:bg-sky-100 dark:active:bg-sky-500/20'}`}>
+                                        {windowInfo?.canRegister ? 'Đóng ĐK' : 'Mở ĐK'}
+                                    </button>
                                     {requests.length > 0 && (
                                         <button onClick={handleApproveAll}
                                                 disabled={approvingAll}
-                                                className="text-xs px-3 py-1.5 bg-sky-50 dark:bg-sky-500/15
-                      hover:bg-sky-100 dark:hover:bg-sky-500/25
-                      text-sky-700 dark:text-sky-300 rounded-lg font-medium
+                                                className="shrink-0 text-xs px-3 py-2 bg-slate-900 dark:bg-sky-500
+                      active:bg-slate-800 dark:active:bg-sky-400
+                      text-white rounded-lg font-medium
                       disabled:opacity-50 transition">
-                                            {approvingAll ? '...' : '✓ Duyệt All'}
+                                            {approvingAll ? '...' : `✓ Duyệt (${requests.length})`}
                                         </button>
                                     )}
                                 </div>
                             </div>
-                            {windowInfo && (
-                                <p className="px-4 pb-3 text-xs text-slate-400 dark:text-slate-500 -mt-1">
-                                    {windowInfo.canRegister
-                                        ? '🔓 Trạng thái: đang mở'
-                                        : '🔒 Trạng thái: đã đóng (lịch được xem là đã chốt)'}
-                                </p>
-                            )}
                             <DepartmentScheduleGrid
                                 employees={employees}
                                 shifts={allSchedules?.shifts || []}
@@ -275,6 +282,7 @@ export default function AdminDashboard() {
                                 }}
                             />
                         </div>
+
                     </div>
                 )}
 

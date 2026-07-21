@@ -39,15 +39,15 @@ export default function EmployeeDashboard() {
             <div className="max-w-3xl mx-auto px-3 py-4 animate-fade-in-up">
 
                 {/* Tabs */}
-                <div className={`grid gap-2 mb-4 ${
-                    TABS.length === 4 ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-3'}`}>
+                <div className="flex gap-1.5 mb-4 overflow-x-auto pb-1 -mx-3 px-3
+              [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
                     {TABS.map(t => (
                         <button key={t.key} onClick={() => setTab(t.key)}
-                                className={`py-2.5 rounded-xl text-xs font-medium
-                  transition-all duration-200 ${
+                                className={`shrink-0 py-2 px-3.5 rounded-xl text-xs font-medium
+                  whitespace-nowrap transition-all duration-200 ${
                                     tab === t.key
                                         ? 'bg-slate-900 dark:bg-sky-500 text-white shadow-md shadow-slate-900/10'
-                                        : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 hover:text-slate-800 dark:hover:text-slate-100'}`}>
+                                        : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 active:bg-slate-50 dark:active:bg-slate-700'}`}>
                             {t.label}
                         </button>
                     ))}

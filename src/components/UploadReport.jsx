@@ -145,10 +145,9 @@ export default function UploadReport({ onSuccess, department = null }) {
                                        className="w-full h-full object-cover"/>
                             }
                             <button onClick={() => removeFile(i)}
-                                    className="absolute top-1 right-1 w-5 h-5 bg-red-500
-                  text-white rounded-full text-xs opacity-0
-                  group-hover:opacity-100 transition
-                  flex items-center justify-center">✕</button>
+                                    className="absolute top-1 right-1 w-6 h-6 bg-black/60
+                  backdrop-blur-sm text-white rounded-full text-xs
+                  flex items-center justify-center active:bg-red-500 transition">✕</button>
                         </div>
                     ))}
                     <button onClick={() => fileRef.current.click()}
