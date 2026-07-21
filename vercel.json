@@ -1,5 +1,0 @@
-mvn clean package -DskipTests{
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
-}
