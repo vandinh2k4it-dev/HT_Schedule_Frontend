@@ -57,12 +57,35 @@ export default function AdminReportView() {
     }
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-3">
+            {/* Danh mục loại báo cáo — hàng nút riêng bên ngoài */}
+            <div className="flex gap-1.5 overflow-x-auto pb-1
+          [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+                <button onClick={() => setTypeFilter('')}
+                        className={`shrink-0 py-2 px-3.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
+                            typeFilter === ''
+                                ? 'bg-slate-900 dark:bg-sky-500 text-white shadow-md shadow-slate-900/10'
+                                : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 active:bg-slate-50 dark:active:bg-slate-700'}`}>
+                    📋 Tất cả
+                </button>
+                {Object.entries(REPORT_TYPES).map(([key, meta]) => (
+                    <button key={key} onClick={() => setTypeFilter(key)}
+                            className={`shrink-0 py-2 px-3.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
+                                typeFilter === key
+                                    ? 'bg-slate-900 dark:bg-sky-500 text-white shadow-md shadow-slate-900/10'
+                                    : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 active:bg-slate-50 dark:active:bg-slate-700'}`}>
+                        {meta.label}
+                    </button>
+                ))}
+            </div>
+
             {/* Filter & Search */}
             <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-4">
-                <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-3">🔍 Lọc báo cáo</h3>
+                <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-3">
+                    🔍 Lọc {typeFilter ? `— ${REPORT_TYPES[typeFilter]?.label}` : '— Tất cả loại'}
+                </h3>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
                     <div>
                         <label className="text-xs text-slate-500 dark:text-slate-400 mb-1 block">Từ ngày</label>
                         <input type="date" value={dateFrom}
@@ -78,18 +101,6 @@ export default function AdminReportView() {
                                 focus:outline-none focus:ring-2 focus:ring-sky-500"/>
                     </div>
                     <div>
-                        <label className="text-xs text-slate-500 dark:text-slate-400 mb-1 block">Loại báo cáo</label>
-                        <select value={typeFilter}
-                                onChange={e => setTypeFilter(e.target.value)}
-                                className="w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-lg
-                                focus:outline-none focus:ring-2 focus:ring-sky-500">
-                            <option value="">Tất cả loại</option>
-                            {Object.entries(REPORT_TYPES).map(([key, meta]) => (
-                                <option key={key} value={key}>{meta.label}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
                         <label className="text-xs text-slate-500 dark:text-slate-400 mb-1 block">Nhân viên</label>
                         <select value={userFilter}
                                 onChange={e => setUserFilter(e.target.value)}
@@ -102,7 +113,7 @@ export default function AdminReportView() {
                         </select>
                     </div>
                     <div>
-                        <label className="text-xs text-slate-500 dark:text-slate-400 mb-1 block">Tìm kiếm</label>
+                        <label className="text-xs text-slate-500 dark:text-slate-400 mb-1 block">Tìm kiếm ghi chú</label>
                         <input type="text" placeholder="Ghi chú / tên..."
                                value={searchText}
                                onChange={e => setSearchText(e.target.value)}
