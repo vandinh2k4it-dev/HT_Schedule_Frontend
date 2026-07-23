@@ -74,3 +74,18 @@ export const getReportsByDate = (date, type) =>
 export const getMyReports = (from, to) =>
     api.get('/api/reports/my', { params: { from, to } })
 export const deleteReport = id => api.delete(`/api/reports/${id}`)
+
+// Điều kiện xếp lịch trực (Duty Rules)
+export const getDutyExemptions = () =>
+    api.get('/api/admin/duty-rules/exemptions')
+export const addDutyExemption = data =>
+    api.post('/api/admin/duty-rules/exemptions', data)
+export const deleteDutyExemption = id =>
+    api.delete(`/api/admin/duty-rules/exemptions/${id}`)
+
+export const getDutyExclusionPairs = () =>
+    api.get('/api/admin/duty-rules/exclusion-pairs')
+export const addDutyExclusionPair = data =>
+    api.post('/api/admin/duty-rules/exclusion-pairs', data)
+export const deleteDutyExclusionPair = id =>
+    api.delete(`/api/admin/duty-rules/exclusion-pairs/${id}`)

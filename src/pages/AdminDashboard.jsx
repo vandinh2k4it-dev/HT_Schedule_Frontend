@@ -10,6 +10,7 @@ import Navbar from '../components/Navbar.jsx'
 import DutyTable from '../components/DutyTable.jsx'
 import DepartmentScheduleGrid from '../components/DepartmentScheduleGrid.jsx'
 import AdminReportView from '../components/AdminReportView.jsx'
+import AdminDutyRules from '../components/AdminDutyRules.jsx'
 import { shiftSolid } from '../constants/colors.js'
 import { parseJwt } from '../utils/jwt.js'
 import dayjs from 'dayjs'
@@ -34,6 +35,7 @@ const TABS = [
     { key: 'report',   label: '📸 Báo cáo'   },
     { key: 'users',    label: '👥 Nhân viên' },
     { key: 'shifts',   label: '⚙️ Ca làm'    },
+    { key: 'dutyRules',label: '🧩 Điều kiện' },
 ]
 
 const EMPTY_NEW_USER = { name: '', email: '', password: '', department: 'SALES', role: 'EMPLOYEE' }
@@ -658,6 +660,11 @@ export default function AdminDashboard() {
                             </button>
                         </div>
                     </div>
+                )}
+
+                {/* ===== ĐIỀU KIỆN XẾP LỊCH TRỰC ===== */}
+                {tab === 'dutyRules' && (
+                    <AdminDutyRules users={employees} />
                 )}
             </div>
         </div>
