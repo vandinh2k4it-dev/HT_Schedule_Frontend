@@ -77,20 +77,26 @@ export default function WeeklyScheduleGrid({ onSuccess }) {
             selectedList.map(([date, code]) =>
                 registerShift({ date, shift: code }))
         )
-        const failCount = results.filter(r => r.status === 'rejected').length
-        if (failCount === 0) {
+        const failed = results.filter(r => r.status === 'rejected')
+        if (failed.length === 0) {
             setMsg({ ok: true, text: `✅ Đăng ký thành công ${selectedList.length} ca!` })
         } else {
+            // Lấy đúng lý do lỗi backend trả về (vd: bị chặn do trùng ca với
+            // người ghép cặp) thay vì chỉ đếm số lượng chung chung.
+            const reasons = failed.map(r =>
+                r.reason?.response?.data || 'Lỗi không xác định')
+            const uniqueReasons = [...new Set(reasons)]
             setMsg({
                 ok: false,
-                text: `⚠️ ${selectedList.length - failCount}/${selectedList.length} ca thành công, ${failCount} ca lỗi.`
+                text: `⚠️ ${selectedList.length - failed.length}/${selectedList.length} ca thành công. `
+                    + uniqueReasons.join(' — ')
             })
         }
         setSelected({})
         await fetchAll()
         onSuccess?.()
         setLoading(false)
-        setTimeout(() => setMsg(null), 4000)
+        setTimeout(() => setMsg(null), 7000)
     }
 
     const displayShifts = shiftTypes.filter(s => s.active).length > 0
@@ -228,7 +234,7 @@ export default function WeeklyScheduleGrid({ onSuccess }) {
             )}
 
             {msg && (
-                <div className={`mt-2 p-2 rounded-lg text-sm text-center ${
+                <div className={`mt-2 p-2.5 rounded-lg text-sm text-left leading-relaxed ${
                     msg.ok
                         ? 'bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-300'
                         : 'bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300'}`}>
