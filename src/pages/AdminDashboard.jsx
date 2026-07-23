@@ -42,13 +42,20 @@ const EMPTY_NEW_USER = { name: '', email: '', password: '', department: 'SALES',
 
 export default function AdminDashboard() {
     const [tab, setTab] = useState('schedule')
+    // Luôn tính theo tuần Thứ 2 → Chủ Nhật, khớp với tuần đăng ký thật
+    // của nhân viên (backend dùng DayOfWeek.MONDAY làm mốc "tuần sau").
+    const mondayOf = d => {
+        const dow = dayjs(d).day() // 0=CN...6=T7
+        return dayjs(d).subtract((dow + 6) % 7, 'day').format('YYYY-MM-DD')
+    }
+
     const [requests, setRequests] = useState([])
     const [users, setUsers] = useState([])
     const [shiftTypes, setShiftTypes] = useState([])
     const [duties, setDuties] = useState([])
     const [allSchedules, setAllSchedules] = useState({ shifts: [], duties: [] })
     const [weekStart, setWeekStart] = useState(
-        dayjs().startOf('week').add(1,'week').format('YYYY-MM-DD'))
+        mondayOf(dayjs().add(1, 'week')))
     const [newShift, setNewShift] = useState({
         code: '', name: '', startTime: '', endTime: '', isPartTime: false })
     const [editDuty, setEditDuty] = useState(null)
@@ -248,7 +255,7 @@ export default function AdminDashboard() {
 
                                 <div className="flex items-center gap-2 mt-3">
                                     <input type="date" value={weekStart}
-                                           onChange={e => setWeekStart(e.target.value)}
+                                           onChange={e => setWeekStart(mondayOf(e.target.value))}
                                            className="flex-1 min-w-0 text-xs px-2.5 py-2 bg-slate-50 dark:bg-slate-900
                       border border-slate-200 dark:border-slate-700
                       text-slate-700 dark:text-slate-200 rounded-lg
@@ -293,7 +300,7 @@ export default function AdminDashboard() {
                     <div>
                         <div className="flex items-center gap-3 mb-3 flex-wrap">
                             <input type="date" value={weekStart}
-                                   onChange={e => setWeekStart(e.target.value)}
+                                   onChange={e => setWeekStart(mondayOf(e.target.value))}
                                    className="text-sm px-3 py-2 bg-white dark:bg-slate-800
                   border border-slate-200 dark:border-slate-700
                   text-slate-700 dark:text-slate-200 rounded-xl
